@@ -31,12 +31,12 @@ module.exports = (env, options) => {
     module: {
       rules: [
         {
-          test: /\.(j|t)sx?$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-          },
-        },
+          test: /\.tsx?$/,
+          use: [
+            { loader: "cache-loader" },
+            { loader: "ts-loader" }
+          ],
+        },        
         {
           test: /\.[s]?css$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
