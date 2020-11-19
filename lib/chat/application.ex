@@ -8,13 +8,17 @@ defmodule Chat.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      Chat.Repo,
+      # Chat.Repo,
       # Start the Telemetry supervisor
       ChatWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: Chat.PubSub},
       # Start the Endpoint (http/https)
-      ChatWeb.Endpoint
+      ChatWeb.Endpoint,
+      {Task.Supervisor, name: Chat.ServersSupervisor, strategy: :one_for_one},
+      {Task.Supervisor, name: Chat.SocketReadSupervisor, strategy: :one_for_one},
+      Chat.ServerPort,
+      Supervisor.child_spec({Phoenix.PubSub, name: :chat_events}, id: :raw_pub_subs)
       # Start a worker by calling: Chat.Worker.start_link(arg)
       # {Chat.Worker, arg}
     ]
